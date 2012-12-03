@@ -20,4 +20,3 @@ STATE.o: STATE.cpp STATE.h
 
 clean:
 	rm -rf *.o
-	rm -rf Shared_Ptr*
