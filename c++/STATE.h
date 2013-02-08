@@ -9,16 +9,20 @@ enum ACTION {
 };
 
 class STATE {
-public:
-    int outState0;
-    int outState1;
-    ACTION actionToMove0;
-    ACTION actionToMove1;
+private:
+    int outStates[2];
+    ACTION actionToMove[2];
 
-    STATE(int out0 = 0, int out1 = 0, ACTION action0 = NOTHING, ACTION action1 = NOTHING);
+public:
+    STATE(const int out0 = 0, const int out1 = 0, const ACTION action0 = NOTHING, 
+                                                    const ACTION action1 = NOTHING);
     ~STATE();
-    int getOutState(int id);
-    ACTION getAction(int id);
+
+    ACTION getAction(const int id) const;
+    int getOutState(const int id) const;
+    
+    void changeOutState(const int id, const int out);
+    void changeAction(const int id, const ACTION act);
 };
 
 #endif

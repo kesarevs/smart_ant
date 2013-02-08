@@ -8,19 +8,19 @@ private:
     float prior;
     int applesWasEat;
     int moveToEatAllApples;
-    int rotation;
-    int x;
-    int y;
-
-public:
     GENOME * genome;
 
-	ANT(int size, GENOME* g = NULL);
+public:
+
+	ANT(const int size, GENOME* g = 0);
 	~ANT();
-    void changePrior(float p);
-	void makeMoves(int maxStep, int mapSize, int appleNumber, int ** map);
-    float returnPriority();
-    int returnAppleNumber();
+
+    float returnPriority() const;
+    int returnAppleNumber() const;
+    GENOME * getGenome() const;
+
+    void changePrior(const float p);
+	void makeMoves(const int maxStep, const int mapSize, const int appleNumber, char ** map);
 };
 
 #endif

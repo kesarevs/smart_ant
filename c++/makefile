@@ -1,7 +1,7 @@
 all: Smart_Ant
 
-Smart_Ant: main.o STATE.o GENOME.o ANT.o SMART_ANT.o
-	g++ main.o STATE.o GENOME.o ANT.o SMART_ANT.o -o Smart_Ant.out
+Smart_Ant: STATE.o GENOME.o ANT.o SMART_ANT.o main.o
+	g++ STATE.o GENOME.o ANT.o SMART_ANT.o main.o -o Smart_Ant.out
 
 main.o: main.cpp SMART_ANT.h ANT.h GENOME.h STATE.h
 	g++ -c main.cpp

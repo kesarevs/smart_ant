@@ -27,9 +27,8 @@ Installing:
     mkdir Smart_Ant
     cd Smart_Ant/
     git clone https://github.com/kesarevs/smart_ant.git
-    cd c++/
+    cd smart_ant/c++
     make
-    make clean
 
 Usage:
 -----

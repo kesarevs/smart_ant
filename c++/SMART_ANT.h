@@ -2,23 +2,26 @@
 #define SMART_ANT_H
 
 #include "ANT.h"
-#include <fstream>
+#include <vector>
 
 class SMART_ANT {
 private:
-    int generationSize;
-    int genomeSize;
+    static const int bigShake = 60;
+    static const int littleShake = 20;
+    static const int generationSize = 50000;
+    static const int survivedAnts = 1000;
+
     std::vector<ANT *> generation;
-    std::vector<ANT *> antsToLove;
     int maxStepToAnt;
     int sizeOfMap; 
     int appleNumber;
-    int ** torMap;
-    int survivedAnts;
+    char ** torMap;
+    int genomeSize;
     int generationNumber;
 
 public:
-    SMART_ANT(int generSize, int survived, int genomSize, int maxStep, int mapSize, int apples, int ** map);
+
+    SMART_ANT(const int genomSize, const int maxStep, const int mapSize, const int apples, char ** map);
     ~SMART_ANT();
     ANT* makeMachine();
     void makeLittleShake();

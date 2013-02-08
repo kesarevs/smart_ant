@@ -10,15 +10,13 @@ bool comparePriority(ANT* ant1, ANT* ant2) {
 }
 
 
-SMART_ANT::SMART_ANT(int generSize, int survived, int genomSize, int maxStep, int mapSize, int apples, int ** map) {
-    srand(time(NULL));
-    generationSize = generSize;
+SMART_ANT::SMART_ANT(int genomSize, int maxStep, int mapSize, int apples, char ** map) {
+    srand(time(0));
     genomeSize = genomSize;
     maxStepToAnt = maxStep;
     sizeOfMap = mapSize;
     appleNumber = apples;
     torMap = map;
-    survivedAnts = survived;
     generationNumber = 0;
 }
 
@@ -61,40 +59,42 @@ void SMART_ANT::makeNextGeneration() {
 void SMART_ANT::makeLove(ANT* parent1, ANT* parent2) {
     ANT* child1 = new ANT(genomeSize);
     ANT* child2 = new ANT(genomeSize);
+    GENOME * childGenome1 = child1->getGenome();
+    GENOME * childGenome2 = child2->getGenome();
+    GENOME * parentGenome1 = parent1->getGenome();
+    GENOME * parentGenome2 = parent2->getGenome();
     if (rand() % 2 == 1) {
-        child1->genome->startState = parent1->genome->startState;
-        child2->genome->startState = parent2->genome->startState;
+        childGenome1->changeStartState(parentGenome1->getStartState());
+        childGenome2->changeStartState(parentGenome2->getStartState());
     } else {
-        child1->genome->startState = parent2->genome->startState;
-        child2->genome->startState = parent1->genome->startState;
+        childGenome1->changeStartState(parentGenome2->getStartState());
+        childGenome2->changeStartState(parentGenome2->getStartState());
     }
     for (int i = 0; i < genomeSize; i++) {
         STATE* st1;
         STATE* st2;
-        STATE* pst1 = parent1->genome->states[i];
-        STATE* pst2 = parent2->genome->states[i];
+        STATE* pst1 = parentGenome1->getState(i);
+        STATE* pst2 = parentGenome2->getState(i);
         switch (rand() % 4) {
         case 0:
-            st1 = new STATE(pst1->outState0, pst2->outState1, pst1->actionToMove0, pst2->actionToMove1);
-            st2 = new STATE(pst2->outState0, pst1->outState1, pst2->actionToMove0, pst1->actionToMove1);
+            st1 = new STATE(pst1->getOutState(0), pst2->getOutState(1), pst1->getAction(0), pst2->getAction(1));
+            st2 = new STATE(pst2->getOutState(0), pst1->getOutState(1), pst2->getAction(0), pst1->getAction(1));
             break;
         case 1:
-            st1 = new STATE(pst2->outState0, pst1->outState1, pst2->actionToMove0, pst1->actionToMove1);
-            st2 = new STATE(pst1->outState0, pst2->outState1, pst1->actionToMove0, pst2->actionToMove1);
+            st1 = new STATE(pst2->getOutState(0), pst1->getOutState(1), pst2->getAction(0), pst1->getAction(1));
+            st2 = new STATE(pst1->getOutState(0), pst2->getOutState(1), pst1->getAction(0), pst2->getAction(1));
             break;
         case 2:
-            st1 = new STATE(pst1->outState0, pst1->outState1, pst1->actionToMove0, pst1->actionToMove1);
-            st2 = new STATE(pst2->outState0, pst2->outState1, pst2->actionToMove0, pst2->actionToMove1);
+            st1 = new STATE(pst1->getOutState(0), pst1->getOutState(1), pst1->getAction(0), pst1->getAction(1));
+            st2 = new STATE(pst2->getOutState(0), pst2->getOutState(1), pst2->getAction(0), pst2->getAction(1));
             break;
         case 3:
-            st1 = new STATE(pst2->outState0, pst2->outState1, pst2->actionToMove0, pst2->actionToMove1);
-            st2 = new STATE(pst1->outState0, pst1->outState1, pst1->actionToMove0, pst1->actionToMove1);
+            st1 = new STATE(pst2->getOutState(0), pst2->getOutState(1), pst2->getAction(0), pst2->getAction(1));
+            st2 = new STATE(pst1->getOutState(0), pst1->getOutState(1), pst1->getAction(0), pst1->getAction(1));
             break;
         }
-        delete child1->genome->states[i];
-        delete child2->genome->states[i];
-        child1->genome->states[i] = st1;
-        child2->genome->states[i] = st2;
+        childGenome1->changeState(i, st1);
+        childGenome1->changeState(i, st2);
     }
     generation.push_back(child1);
     generation.push_back(child2);
@@ -102,31 +102,31 @@ void SMART_ANT::makeLove(ANT* parent1, ANT* parent2) {
 
 void SMART_ANT::makeMutation(ANT* ant) {
     int i = rand() % genomeSize;
-    STATE* st = ant->genome->states[i];
+    STATE* st = ant->getGenome()->getState(i);
 
     switch (rand() % 6) {
         case 0:
-            ant->genome->startState = rand() % genomeSize;
+            ant->getGenome()->changeStartState(rand() % genomeSize);
             break;
         case 1:
-            st->actionToMove0 = (ACTION) (rand() % 4);
+            st->changeAction(0, (ACTION) (rand() % 4));
             break;
         case 2:
-            st->actionToMove1 = (ACTION) (rand() % 4);
+            st->changeAction(1, (ACTION) (rand() % 4));
             break;
         case 3:
-            st->outState0 = rand() % genomeSize;
+            st->changeOutState(0, rand() % genomeSize);
             break;
         case 4:
-            st->outState1 = rand() % genomeSize;
+            st->changeOutState(1, rand() % genomeSize);
             break;
         case 5:
-            int tempOut = st->outState0;
-            ACTION tempAction = st->actionToMove0;
-            st->outState0 = st->outState1;
-            st->outState1 = tempOut;
-            st->actionToMove0 = st->actionToMove1;
-            st->actionToMove1 = tempAction;
+            int tempOut = st->getOutState(0);
+            ACTION tempAction = st->getAction(0);
+            st->changeOutState(0, st->getOutState(1));
+            st->changeOutState(1, tempOut);
+            st->changeAction(0, st->getAction(1));
+            st->changeAction(1, tempAction);
             break;
     }
 }
@@ -172,8 +172,6 @@ ANT* SMART_ANT::makeMachine() {
     makeFirstGeneration();
     generationNumber = 1;
     int lastResult = 0;
-    const int bigShake = 60;
-    const int littleShake = 20;
     int generToLittleShake = littleShake;
     int generToBigShake = bigShake;
     while(generation[0]->returnAppleNumber() != appleNumber) {
@@ -192,7 +190,7 @@ ANT* SMART_ANT::makeMachine() {
             makeBigShake();
         }
         makeNextGeneration();
-        std::cout << "#" << generationNumber++ << ", apples was eat: " << generation[0]->returnAppleNumber() << " (" << appleNumber << ") " << generToLittleShake << " " << generToBigShake << std::endl;
+        std::cout << "#" << generationNumber++ << ", apples was eat: " << generation[0]->returnAppleNumber() << "/" << appleNumber << " " << generToLittleShake << " " << generToBigShake << std::endl;
         generToLittleShake--;
         generToBigShake--;
     }

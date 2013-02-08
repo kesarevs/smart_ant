@@ -2,18 +2,25 @@
 #define GENOME_H
 
 #include "STATE.h"
-#include <vector>
+
+
 class GENOME {
+private:
+	int genomSize;
+	int startState;
+	STATE ** states;
 
 public:
-    int genomSize;
-    int startState;
-    std::vector<STATE *> states;
 
-    GENOME(int size);
+    GENOME(const int size);
     ~GENOME();
-    STATE * getState(int id);
-    STATE * getStartState();
+
+    STATE * getState(const int id) const;
+    int getStartState() const;
+    int getGenomeSize() const;
+
+    void changeStartState(const int st);
+    void changeState(const int id, STATE * st);
 };
 
 #endif

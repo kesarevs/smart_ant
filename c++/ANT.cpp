@@ -1,21 +1,18 @@
 #include "ANT.h"
 
 
-int sign(int x) {
+int sign(const int x) {
     return (x >= 0) ? 1 : -1;
 }
 
-ANT::ANT(int size, GENOME* g) {
-    genome = (g == NULL) ? new GENOME(size) : g;
+ANT::ANT(const int size, GENOME* g) {
+    genome = (g == 0) ? new GENOME(size) : g;
     prior = -1;
     applesWasEat = 0;
     moveToEatAllApples = 0;
-    rotation = 0;
-    x = 0;
-    y = 0;
 }
 
-int ANT::returnAppleNumber() {
+int ANT::returnAppleNumber() const {
     return applesWasEat;
 }
 
@@ -24,12 +21,13 @@ ANT::~ANT() {
     delete genome;
 }
 
-float ANT::returnPriority() {
+float ANT::returnPriority() const {
     return prior;
 }
 
-void ANT::makeMoves(int maxStep, int mapSize, int appleNumber, int ** mapSource) {
-    int map[40][40];
+void ANT::makeMoves(const int maxStep, const int mapSize, const int appleNumber, char ** mapSource) {
+    char map[40][40];
+    int appNum = appleNumber;
     applesWasEat = 0;
     moveToEatAllApples = 0;
     for (int i = 0; i < mapSize; i++) {
@@ -37,12 +35,12 @@ void ANT::makeMoves(int maxStep, int mapSize, int appleNumber, int ** mapSource)
             map[i][j] = mapSource[i][j];
         }
     }
-    x = 0;
-    y = 0;
-    rotation = 0;
-    STATE * st = genome->getStartState();
+    int x = 0;
+    int y = 0;
+    int rotation = 0;
+    STATE * st = genome->getState(genome->getStartState());
     int moves = 0;
-    while(appleNumber && moves < maxStep) {
+    while(appNum && moves < maxStep) {
 
         if(x >= mapSize || x < 0) {
             x = x - mapSize * sign(x);
@@ -84,7 +82,7 @@ void ANT::makeMoves(int maxStep, int mapSize, int appleNumber, int ** mapSource)
             x = nextX;
             y = nextY;
             if(map[nextY][nextX]) {
-                --appleNumber;
+                --appNum;
                 map[nextY][nextX] = 0;
 
                 if(moves < maxStep) {
@@ -112,9 +110,12 @@ void ANT::makeMoves(int maxStep, int mapSize, int appleNumber, int ** mapSource)
     }
     moveToEatAllApples = moves;
     prior = applesWasEat + (float)(maxStep - moveToEatAllApples) / ((float) maxStep);
-    rotation = 0;
 }
 
-void ANT::changePrior(float p) {
+void ANT::changePrior(const float p) {
     prior = p;
+}
+
+GENOME * ANT::getGenome() const {
+    return genome;
 }
