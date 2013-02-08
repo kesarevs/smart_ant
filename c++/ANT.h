@@ -18,6 +18,7 @@ public:
     float returnPriority() const;
     int returnAppleNumber() const;
     GENOME * getGenome() const;
+    void printAnt() const;
 
     void changePrior(const float p);
 	void makeMoves(const int maxStep, const int mapSize, const int appleNumber, char ** map);

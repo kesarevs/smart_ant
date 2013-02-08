@@ -1,5 +1,5 @@
 #include "ANT.h"
-
+#include <iostream>
 
 int sign(const int x) {
     return (x >= 0) ? 1 : -1;
@@ -16,6 +16,18 @@ int ANT::returnAppleNumber() const {
     return applesWasEat;
 }
 
+void ANT::printAnt() const {
+    std::cout << std::endl << "Start State: " << genome->getStartState() << std::endl;
+    char act[4];
+    act[MOVE] = 'M';
+    act[TURN_LEFT] = 'L';
+    act[TURN_RIGHT] = 'R';
+    act[NOTHING] = 'N';
+    for (size_t i = 0; i < genome->getGenomeSize(); i++) {
+        STATE* temp = genome->getState(i);
+        std::cout << i << ":  " << temp->getOutState(0) << " " << temp->getOutState(1) << " " << act[temp->getAction(0)] << " " << act[temp->getAction(1)] << std::endl;
+    }
+}
 
 ANT::~ANT() {
     delete genome;
