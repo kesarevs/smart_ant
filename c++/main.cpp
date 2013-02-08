@@ -1,7 +1,6 @@
 #include "SMART_ANT.h"
 #include <fstream>
 #include <iostream>
-#include <string>
 #include <assert.h>
 
 int main(int argc, char *argv[]) {
