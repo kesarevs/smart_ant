@@ -29,4 +29,5 @@ int main(int argc, char *argv[]) {
     ANT * ant = machine.makeMachine();
     std::cout << std::endl << argv[1] << std::endl;
     ant->printAnt();
+    in.close();
 }
